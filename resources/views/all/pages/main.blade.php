@@ -87,6 +87,25 @@
             </div>
             {{-- card 2 --}}
             <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
+                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Clustering Resiko Banjir
+                </p>
+                <div class="bg-white rounded-xl flex h-[230px]">
+                    <div class="px-[30px] py-[20px]">
+                        <p class="text-[18px] font-[600]">Visualisasi Peta Clustering Resiko Banjir Berdasarkan desa</p>
+                        <div class="text-[12px] mt-2">
+                            <p>Menampilkan daerah resiko banjir berdasarkan perhitungan kmeans</p>
+                        </div>
+                    </div>
+                    <div class="pe-6 py-[20px]">
+                        <img src="/img/fitur/clustering.png" alt="" class="w-[350px]">
+                        <a href="{{ route('clustering-banjir') }}"
+                            class="w-full tex-center py-2 block text-center bg-blue1 mt-3 text-white font-[300] rounded-lg text-[12px]">Lihat
+                            Prediksi</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
                 <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Peta Sebaran
                     Bencana</p>
                 <div class="bg-white rounded-xl flex h-[230px]">

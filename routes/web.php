@@ -17,6 +17,7 @@ use App\Http\Controllers\PrediksiCuacaController;
 use App\Http\Controllers\admin\penggunaanDonasiController;
 use App\Http\Controllers\bpbd\PoskoController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ClusteringBanjirController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersebaranBencanaControlller;
@@ -40,6 +41,9 @@ Route::get('/register', [LoginController::class, 'viewRegister'])->name('registe
 Route::post('/register', [LoginController::class, 'register'])->name('checkRegister');
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
+
+//route untuk clustering
+Route::get('/clustering-banjir', [ClusteringBanjirController::class, 'index'])->name('clustering-banjir');
 //route untuk prediksi bencana
 Route::get('/prediksi-bencana', [PrediksiBencanaController::class, 'index'])->name('prediksi-bencana');
 
