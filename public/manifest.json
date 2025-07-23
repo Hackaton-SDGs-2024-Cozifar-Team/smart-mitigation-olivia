@@ -1,0 +1,76 @@
+{
+  "name": "Smart Mitigation - Sistem Mitigasi Bencana",
+  "short_name": "Smart Mitigation",
+  "description": "Platform inovatif untuk mitigasi bencana berbasis teknologi AI dan machine learning",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#283F50",
+  "icons": [
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile-2.png",
+      "sizes": "378x878",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "features": [
+    "Prediksi bencana dengan AI",
+    "Pelaporan bencana real-time",
+    "Sistem donasi terintegrasi",
+    "Peta interaktif bencana",
+    "Notifikasi darurat"
+  ],
+  "shortcuts": [
+    {
+      "name": "Lapor Bencana",
+      "short_name": "Lapor",
+      "description": "Laporkan bencana yang terjadi",
+      "url": "/pelaporan-bencana",
+      "icons": [
+        {
+          "src": "/icons/shortcut-report.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Donasi",
+      "short_name": "Donasi",
+      "description": "Berikan bantuan donasi",
+      "url": "/#donasi",
+      "icons": [
+        {
+          "src": "/icons/shortcut-donate.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Peta Bencana",
+      "short_name": "Peta",
+      "description": "Lihat peta sebaran bencana",
+      "url": "/#tampilanMap",
+      "icons": [
+        {
+          "src": "/icons/shortcut-map.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

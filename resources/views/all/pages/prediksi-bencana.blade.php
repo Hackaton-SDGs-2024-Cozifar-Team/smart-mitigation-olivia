@@ -2,7 +2,7 @@
 
 @section('title', 'Analisis Banjir')
 @section('landing')
-<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+<div class="min-h-screen bg-gradient-to-b mt-24 from-gray-50 to-gray-100">
     <div class="container mx-auto px-4 py-8">
         <!-- Hero Section -->
         <div class="mb-8 text-center">
@@ -108,8 +108,8 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->tanggal_kejadian }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->deskripsi_alamat }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->informasiBencana->korban_terluka }} orang</td>
-                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->informasiBencana->dampak_kerusakan }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->informasiBencana->korban_terluka ?? 'Tidak tersedia' }} orang</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">{{ $lap->informasiBencana->dampak_kerusakan ?? 'Tidak tersedia' }}</td>
                                 </tr>                              
                                 @endforeach
                             </tbody>

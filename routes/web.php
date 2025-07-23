@@ -15,6 +15,7 @@ use App\Http\Controllers\bpbd\informasiBencanaController;
 use App\Http\Controllers\bpbd\laporanBencanaTerkonfirmasiController;
 use App\Http\Controllers\PrediksiCuacaController;
 use App\Http\Controllers\admin\penggunaanDonasiController;
+use App\Http\Controllers\Api\GeminiController;
 use App\Http\Controllers\bpbd\PoskoController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ClusteringBanjirController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersebaranBencanaControlller;
 use App\Http\Controllers\PrediksiBencanaController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Middleware\AksesAdmin;
 use App\Http\Middleware\AksesBPBD;
@@ -55,12 +57,12 @@ Route::get('/peta-persebaran-bencana', [PersebaranBencanaControlller::class, 'in
 //route untuk pelaporan bencana
 Route::get('/pelaporan-bencana', [PelaporanBencanaController::class, 'index'])->name('pelaporan-bencana')->middleware('auth');
 Route::post('/pelaporan-bencana', [PelaporanBencanaController::class, 'store'])->name('pelaporan-bencana.store');
-Route::get('/riwayat-bencana', [RiwayatController::class, 'indexRiwayatBencana']);
-Route::get('/riwayat-donasi', [RiwayatController::class, 'indexRiwayatDonasi']);
+Route::get('/riwayat-bencana', [RiwayatController::class, 'indexRiwayatBencana'])->name('riwayat-bencana');
+Route::get('/riwayat-donasi', [RiwayatController::class, 'indexRiwayatDonasi'])->name('riwayat-donasi');
 //route untuk donasi
 Route::get('/donasi', [DonationPageController::class, 'index'])->name('user.donasi');
 Route::get('/detail-donasi/{id}', [DonationPageController::class, 'detailPage'])->name('user.donasi.detail');
-Route::get('/tambah-donasi/{id}', [DonationController::class, 'index'])->name('user.donasi.tambah');
+Route::get('/tambah-donasi/{id}', [DonationController::class, 'index'])->name('user.donasi.tambah')->middleware('auth');
 Route::post('/get-token', [DonationController::class, 'getToken'])->name('user.store.donasi-uang');
 Route::post('/donasi-barang', [DonationController::class, 'storeBarang'])->name('user.store.donasi-barang');
 Route::get('/detail-distribusi/{id}', [DistribusiController::class, 'detailDistribusi']);
@@ -124,4 +126,16 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('posko', PoskoController::class);
     })->middleware([AksesBPBD::class]);
+});
+
+Route::post('/gemini-articles', [GeminiController::class, 'getArticles']);
+Route::get('/artikel/detail', function () {
+    return view('all.pages.detail-artikel');
+})->name('artikel.detail');
+
+// Profile routes (add these to your existing routes)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
 });

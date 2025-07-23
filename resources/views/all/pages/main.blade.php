@@ -8,367 +8,154 @@
             background-color: #283F50;
             color: #fff;
         }
+        
     </style>
-    <section id="main-page" class="w-full h-[800px] pt-[70px] flex flex-col md:flex-row">
-        <div class="flex-1">
-            <img src="/img/maps.png" alt="" class="w-[820px]">
-        </div>
-        <div class="flex-1 flex flex-col mt-[-150px] md:mt-0 justify-center items-start">
-            <span class="text-[50px] md:text-[65px] font-[500] text-white">
-                <h1>DETEKSI DINI</h1>
-                <h1 class="mt-[-35px]">LINDUNGI DIRI</h1>
-            </span>
-            <p class="w-full md:w-[550px] text-white font-[300] text-[18px]">Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
-            <a href="#tampilanMap" class="px-8 py-2 bg-blue4 text-blue1 block mt-4 rounded-full font-semibold">LIHAT
-                PREDIKSI</a>
-        </div>
-        <div class="fixed bottom-5 right-5">
-            <div
-                class="bg-transparent border-2 border-blue-500 hover:bg-blue-400 transition duration-200 w-[60px] h-[60px] flex items-center justify-center rounded-full p-3 shadow-md cursor-pointer">
-                <i class="ri-chat-3-line text-blue-500 text-[30px]" id="chat-icon"></i>
-            </div>
-        </div>
-    </section>
-    <section id="about-page" class="px-6 md:px-[150px] py-[100px] flex flex-col lg:flex-row gap-[40px] md:gap-[80px]">
-        <div>
-            <img src="/img/about/image1.png" alt="" class="w-full md:w-[450px]">
-        </div>
-        <div class="flex-1">
-            <h2 class="text-[30px] md:text-[45px] font-[600] text-blue1">PREDIKSI BERBASIS ARTIFICIAL INTELEGENCE</h2>
-            <p class="text-[16px] md:text-[18px] text-blue1">Lorem Ipsum is simply dummy text...</p>
-            <div class="flex flex-row md:ml-[-200px] gap-4 mt-[30px]">
-                <img src="/img/about/image2.png" alt="" class="w-[150px] md:w-[290px]">
-                <img src="/img/about/image3.png" alt="" class="w-[150px] md:w-[290px]">
-                <img src="/img/about/image4.png" alt="" class="w-[150px] md:w-[290px]">
-            </div>
-        </div>
-    </section>
-    <section id="fitur-page" class="flex flex-col justify-center items-center w-full bg-blue1 py-[100px] text-white">
-        <h2 class="text-[40px] font-[700] text-blue4">TEMUKAN BERBAGAI FITUR</h2>
-        <p class="text-blue4 text-[20px] font-[300]">Menyediakan berbagai fitur untuk mitigasi dan penanganan bencana alam
-        </p>
-        <div class="py-[30px] flex flex-wrap px-[15px] md:px-[100px] gap-4 mt-8 justify-center">
-            {{-- card 1 --}}
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Prediksi Bencana
-                </p>
-                <div class="bg-white rounded-xl flex h-[230px]">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Prediksi Bencana Banjir Berbasis Artificial Intellegence </p>
-                        <div class="text-[12px] mt-2">
-                            <p>Menggunakan parameter:</p>
-                            <span class="flex items-center gap-2">
-                                <img src="../img/fitur/triangle.png" alt="" class="w-2">
-                                <p>Cuaca (cuaca, tutupan awan, dll)</p>
-                            </span>
-                            <span class="flex items-center gap-2">
-                                <img src="../img/fitur/triangle.png" alt="" class="w-2">
-                                <p>Iklim (suhu, kecepatan angin, dll)</p>
-                            </span>
-                            <span class="flex items-center gap-2">
-                                <img src="../img/fitur/triangle.png" alt="" class="w-2">
-                                <p>Jarak Terhadap Sungai</p>
-                            </span>
-                            <span class="flex items-center gap-2">
-                                <img src="../img/fitur/triangle.png" alt="" class="w-2">
-                                <p>Tutupan Lahan</p>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/prediksi-bencana.png" alt="" class="w-[350px]">
-                        <a href="{{ route('prediksi-bencana') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-3 text-white font-[300] rounded-lg text-[12px]">Lihat
-                            Prediksi</a>
-                    </div>
-                </div>
-            </div>
-            {{-- card 2 --}}
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Clustering Resiko Banjir
-                </p>
-                <div class="bg-white rounded-xl flex h-[230px]">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Visualisasi Peta Clustering Resiko Banjir Berdasarkan desa</p>
-                        <div class="text-[12px] mt-2">
-                            <p>Menampilkan daerah resiko banjir berdasarkan perhitungan kmeans</p>
-                        </div>
-                    </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/clustering.png" alt="" class="w-[350px]">
-                        <a href="{{ route('clustering-banjir') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-3 text-white font-[300] rounded-lg text-[12px]">Lihat
-                            Prediksi</a>
-                    </div>
-                </div>
-            </div>
 
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Peta Sebaran
-                    Bencana</p>
-                <div class="bg-white rounded-xl flex h-[230px]">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Visualisasi Peta Sebaran Bencana Berdasarkan Laporan Bencana</p>
-                        <div class="text-[12px] mt-2">
-                            <span class="flex items-center gap-2">
-                                <p>Menampilkan daerah yang terkena bencana berdasarkan hasil laporan bencana</p>
-                            </span>
+    <section id="main-page" class="relative w-full h-[900px] pt-[70px] flex flex-col md:flex-row hero-bg overflow-hidden">
+        <!-- Background decorative elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div class="absolute top-40 right-20 w-24 h-24 bg-blue-300/20 rounded-full blur-lg floating-animation"></div>
+            <div class="absolute bottom-32 left-1/4 w-40 h-40 bg-blue-400/15 rounded-full blur-2xl"></div>
+            <div class="absolute top-1/2 right-10 w-16 h-16 bg-white/20 rounded-full blur-md floating-animation" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <!-- Gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-blue-800/30"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row w-full h-full">
+            <!-- Left side - Map visualization -->
+            <div class="flex-1 flex items-center justify-center relative group">
+                <div class="relative">
+                    <!-- Map container with enhanced effects -->
+                    <div class="relative transform hover:scale-105 transition-all duration-700 floating-animation">
+                        <img src="/img/maps.png" alt="Smart Disaster Prediction Map" 
+                             class="w-[820px] max-w-full h-auto drop-shadow-2xl filter brightness-110 contrast-105">
+                        
+                        <!-- Interactive overlay elements -->
+                        <div class="absolute top-1/4 left-1/4 w-4 h-4 bg-red-500 rounded-full pulse-glow opacity-80">
+                            <div class="absolute inset-0 bg-red-500 rounded-full animate-ping"></div>
                         </div>
+                        <div class="absolute top-1/2 right-1/3 w-3 h-3 bg-yellow-500 rounded-full animate-pulse opacity-70"></div>
+                        <div class="absolute bottom-1/3 left-1/2 w-5 h-5 bg-green-500 rounded-full animate-bounce opacity-60"></div>
                     </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/sebaran-bencana.png" alt="" class="w-[400px]">
-                        <a href="{{ route('persebaran-bencana') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-3 text-white font-[300] rounded-lg text-[12px]">Lihat
-                            Peta Sebaran</a>
+                    
+                    <!-- Floating info cards -->
+                    <div class="absolute -top-0 -right-8 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-sm font-semibold text-gray-700">Real-time Monitoring</span>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-1">95% Accuracy</p>
+                    </div>
+                    
+                    <div class="absolute top-96 -left-0 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-x-4 group-hover:translate-x-0" style="transition-delay: 0.2s;">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span class="text-sm font-semibold text-gray-700">AI Prediction</span>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-1">24/7 Analysis</p>
                     </div>
                 </div>
             </div>
-            {{-- card 3 --}}
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Tutupan Lahan</p>
-                <div class="bg-white rounded-xl flex h-[230px]">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Visualisasi Tutupan Lahan Menggunakan Google Earth Engine (GEE)
-                        </p>
-                        <div class="text-[12px] mt-2">
-                            <span class="flex items-center gap-2">
-                                <p>Menampilkan tutupan lahan menggunakan Google Earth Engine</p>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/tutupan-lahan.png" alt="" class="w-[400px]">
-                        <a href="{{ route('tutupan-lahan') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-3 text-white font-[300] rounded-lg text-[12px]">Lihat
-                            Tutupan Lahan</a>
-                    </div>
+            
+            <!-- Right side - Hero content -->
+            <div class="flex-1 flex flex-col mt-[-100px] md:mt-0 justify-center items-start px-6 md:px-12 relative">
+                <!-- Hero badge -->
+                <div class="mb-6 opacity-0 animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <span class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold border border-white/30">
+                        🚀 Smart Mitigation
+                    </span>
                 </div>
-            </div>
-            {{-- card 4 --}}
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Laporan Bencana
-                </p>
-                <div class="bg-white rounded-xl flex">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Laporan Bencana Terintegrasi Dengan Tim Respon Cepat</p>
-                        <div class="text-[12px] mt-2">
-                            <span class="flex items-center gap-2">
-                                <p>Fitur laporan yang terhubung langsung dengan tim respon cepat dari Badan Penanggulanan
-                                    Bencana Daerah atau BPDB sekitar</p>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/laporan-bencana.png" alt="" class="w-[400px]">
-                        <a href="{{ route('pelaporan-bencana') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-2 text-white font-[300] rounded-lg text-[12px]">Laporan
-                            Bencana</a>
-                    </div>
+                
+                <!-- Main heading -->
+                <div class="mb-8 opacity-0 animate-fadeInUp" style="animation-delay: 0.4s;">
+                    <h1 class="text-[50px] md:text-[72px] font-[800] text-white leading-tight tracking-tight">
+                        <span class="block bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                            DETEKSI DINI
+                        </span>
+                        <span class="block mt-[-20px] bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
+                            LINDUNGI DIRI
+                        </span>
+                    </h1>
+                    <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mt-4"></div>
                 </div>
-            </div>
-            {{-- card 5 --}}
-            <div class="bg-blue4 text-black w-full md:w-[480px] rounded-xl">
-                <p class="p-[15px] text-center bg-blue4 rounded-t-xl text-[24px] font-semibold text-blue1">Donasi Bencana
-                </p>
-                <div class="bg-white rounded-xl flex">
-                    <div class="px-[30px] py-[20px]">
-                        <p class="text-[18px] font-[600]">Donasi Bencana Sesuai Dengan Kebutuhan di Lapangan</p>
-                        <div class="text-[12px] mt-2">
-                            <span class="flex items-center gap-2">
-                                <p>Fitur laporan yang terhubung langsung dengan tim respon cepat dari Badan Penanggulanan
-                                    Bencana Daerah atau BPDB sekitar</p>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="pe-6 py-[20px]">
-                        <img src="/img/fitur/donasi-bencana.png" alt="" class="w-[400px]">
-                        <a href="{{ route('user.donasi') }}"
-                            class="w-full tex-center py-2 block text-center bg-blue1 mt-2 text-white font-[300] rounded-lg text-[12px]">Laporan
-                            Bencana</a>
-                    </div>
+                
+                <!-- Description -->
+                <div class="mb-8 opacity-0 animate-fadeInUp" style="animation-delay: 0.6s;">
+                    <p class="w-full md:w-[550px] text-white/90 font-[400] text-[20px] leading-relaxed">
+                        Sistem prediksi bencana berbasis <span class="font-semibold text-blue-200">Artificial Intelligence</span> 
+                        yang memberikan peringatan dini dengan akurasi tinggi untuk melindungi masyarakat dari risiko bencana alam.
+                    </p>
                 </div>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-8 opacity-0 animate-fadeInUp" style="animation-delay: 0.8s;">
+                    <a href="#tampilanMap" 
+                       class="group inline-flex items-center px-8 py-4 bg-blue1 hover:from-blue-500 hover:to-blue-700 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-chart-line mr-3 group-hover:animate-pulse"></i>
+                        LIHAT PREDIKSI
+                        <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform duration-300"></i>
+                    </a>
+                    
+                    <a href="#fitur-page" 
+                       class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 hover:bg-white/20 text-white rounded-2xl font-semibold text-lg transition-all duration-300 hover:border-white/50">
+                        <i class="fas fa-info-circle mr-3"></i>
+                        Pelajari Lebih Lanjut
+                    </a>
+                </div>
+                
             </div>
         </div>
+        
     </section>
-        <section class="bg-[#CFDDE4] py-20"  id="donasi">
-        <div class=" mx-auto text-center px-4">
-            <h1 class=" p-3 inline-block text-[20px] font-bold text-white bg-[#283F50]">Donasi Terkini</h1>
-            <p class="p-4">Mari wujudkan kepedulian kita dengan membantu sesama !</p>
-        </div>
-        @php
-            use App\Util\FormatRupiah;
-        @endphp
-        <div class="flex p-10 gap-8 flex-wrap justify-center">
-            @foreach ($bencana as $item)
-                @php
-                    $progresBar = ($item->total_donasi  / $item->target_uang_donasi) * 100;
-                @endphp
-           <div class="bg-white rounded-2xl shadow-lg overflow-hidden w-[300px] hover:shadow-xl transition duration-300">
-            <img src="{{ asset('/img/donasi/Frame 1389 (1).png') }}" alt="" class="w-full h-48 object-cover">
-        
-            <div class="p-4">
-                <p class="text-xl font-semibold text-gray-800 mb-2">{{ $item->nama_bencana }}</p>
-        
-                <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
-                    <div class="bg-blue-600 h-3 rounded-full transition-all duration-300" style="width: {{ $progresBar }}%"></div>
+      <div class="fixed bottom-8 right-8 z-50 opacity-0 animate-fadeInUp" style="animation-delay: 1.2s;">
+            <div class="relative group">
+                <div class="absolute inset-0 shadow-lg shadow-cyan-100 bg-blue1 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                <div class="relative bg-blue1 hover:from-blue-600 hover:to-purple-600 transition-all duration-300 w-[70px] h-[70px] flex items-center justify-center rounded-full shadow-2xl cursor-pointer transform hover:scale-110 group">
+                    <i class="ri-chat-3-line text-white text-[32px]" id="chat-icon"></i>
+                    
+                    <!-- Notification badge -->
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                        <span class="text-white text-xs font-bold">!</span>
+                    </div>
+                    
+                    <!-- Tooltip -->
+                    <div class="absolute right-full mr-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Butuh Bantuan?
+                        <div class="absolute left-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-l-gray-800"></div>
+                    </div>
                 </div>
-        
-                <p class="text-sm text-gray-600 mb-1">Terkumpul</p>
-                <p class="text-xl font-bold text-gray-900 mb-3">Rp. {{ FormatRupiah::Rupiah($item->total_donasi) }}</p>
-        
-                <div class="text-xs text-gray-600 space-y-1">
-                    <p>
-                        <i class="fa-solid fa-location-dot text-red-500 mr-1"></i>
-                        {{ $item->desa->nama_desa }}, {{ $item->desa->kecamatan->nama_kecamatan }}
-                    </p>
-                    <p>
-                        <i class="fa-solid fa-calendar-days text-blue-500 mr-1"></i>
-                        {{ \Carbon\Carbon::parse($item->tanggal_kejadian)->translatedFormat('d F Y') }}
-                    </p>
-                    <p>
-                        <i class="fa-solid fa-users text-green-600 mr-1"></i>
-                        5 Kebutuhan logistik
-                    </p>
-                </div>
-        
-                <a href="{{ route('user.donasi.detail', $item->id_laporan_bencana) }}"
-                   class="block mt-4 text-center bg-[#283F50] hover:bg-[#1f323f] text-white py-2 px-4 rounded-lg text-sm font-medium transition duration-200">
-                    Donasi Sekarang
-                </a>
             </div>
         </div>
-        
-            @endforeach
 
-        </div>
-    </section>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+
+    @include('all.component.about')
+
+    @include('all.component.fitur')
+
+    @include('all.component.donasi')
    
     @include('all.component.map')
 
-    <section id="articles" class="px-[150px] py-[100px]">
-        <h2 class="text-[45px] font-[600] text-blue1 text-center mb-10">Artikel Terbaru</h2>
-        <div class="flex flex-wrap justify-center gap-10">
-            <!-- Article Card 1 -->
-            @foreach ($artikel as $data)
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden w-[300px]">
-                    <img src="{{ asset('uploads/foto-artikel/' . $data->foto_artikel) }}" alt="Judul Artikel 1"
-                        class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-blue1">{{ $data->judul_artikel }}</h3>
-                        <p class="text-gray-600 text-sm mb-2">Tanggal: <span
-                                class="font-semibold">{{ $data->tanggal }}</span>
-                        </p>
-                        <p class="text-gray-700 text-base">{{ $data->isi_artikel }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section>
-
-
+    @include('all.component.artikel')
     <!-- Chatbot Modal -->
- 
-<!-- Chatbot Modal -->
-<div id="chat-modal" class="fixed bottom-20 right-5 w-80 bg-white rounded-lg shadow-xl border hidden z-50">
-    <div class="bg-[#283F50] text-white flex justify-between items-center px-4 py-3 rounded-t-lg">
-        <h2 class="text-lg font-semibold">Bantuan</h2>
-        <button id="close-modal" class="hover:text-gray-300 text-white text-xl">&times;</button>
-    </div>
-    <div id="chatbox" class="p-4 space-y-2 h-80 overflow-y-auto text-sm bg-gray-50">
-    </div>
-    <div class="p-3 border-t bg-white">
-        <input type="text" id="user-input" class="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ketik pesan...">
-        <button id="send-button" class="w-full mt-2 bg-[#283F50] text-white p-2 rounded-md text-sm">Kirim</button>
-    </div>
-</div>
+    @include('all.component.chatbot')
 
-    <script>
-        // Function to toggle the modal visibility
-        const chatModal = document.getElementById('chat-modal');
-        const chatIcon = document.getElementById('chat-icon');
-        const closeModal = document.getElementById('close-modal');
-
-        chatIcon.onclick = function() {
-            chatModal.classList.remove('hidden');
-        }
-
-        closeModal.onclick = function() {
-            chatModal.classList.add('hidden');
-            document.getElementById('chatbox').innerHTML = "";
-        }
-
-        // Chat functionality
-        function sendMessage() {
-    var userInput = document.getElementById('user-input').value;
-    if (userInput.trim() !== "") {
-        var chatbox = document.getElementById('chatbox');
-
-        // User message (kanan)
-        var userMessage = document.createElement('div');
-        userMessage.className = 'mb-2 flex justify-end';
-        userMessage.innerHTML = `
-            <div class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg max-w-[75%] text-sm">
-                ${userInput}
-            </div>`;
-        chatbox.appendChild(userMessage);
-        chatbox.scrollTop = chatbox.scrollHeight;
-
-        // Kirim ke API
-        fetch('http://127.0.0.1:8000/api/chatbot', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                message: userInput
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network error');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Bot message (kiri)
-            var botMessage = document.createElement('div');
-            botMessage.className = 'mb-2 flex justify-start';
-            botMessage.innerHTML = `
-                <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-[75%] text-sm">
-                    ${data.response}
-                </div>`;
-            chatbox.appendChild(botMessage);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            var errorMessage = document.createElement('div');
-            errorMessage.className = 'mb-2 flex justify-start';
-            errorMessage.innerHTML = `
-                <div class="bg-red-500 text-white px-4 py-2 rounded-lg max-w-[75%] text-sm">
-                    Gagal mengirim pesan.
-                </div>`;
-            chatbox.appendChild(errorMessage);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        });
-
-        // Kosongkan input
-        document.getElementById('user-input').value = "";
-    }
-}
-
-
-        document.getElementById('send-button').addEventListener('click', sendMessage);
-
-        // Handle enter key for input
-        document.getElementById('user-input').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-                event.preventDefault(); // Prevent form submit if in form
-            }
-        });
-    </script>
 @endsection
