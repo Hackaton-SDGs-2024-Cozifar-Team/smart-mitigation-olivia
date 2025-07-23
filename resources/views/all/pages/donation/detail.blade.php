@@ -212,10 +212,10 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 animate-fadeInUp">
                 @php
                     $info = [
-                        ['icon' => 'house-chimney-crack', 'color' => 'text-red-500', 'bg' => 'bg-red-50', 'label' => 'Tingkat Kerusakan', 'value' => $bencana->informasiBencana->dampak_kerusakan],
-                        ['icon' => 'person-falling-burst', 'color' => 'text-red-600', 'bg' => 'bg-red-50', 'label' => 'Korban Meninggal', 'value' => $bencana->informasiBencana->korban_meninggal],
-                        ['icon' => 'person-hiking', 'color' => 'text-yellow-500', 'bg' => 'bg-yellow-50', 'label' => 'Korban Mengungsi', 'value' => $bencana->informasiBencana->korban_mengungsi],
-                        ['icon' => 'user-injured', 'color' => 'text-orange-500', 'bg' => 'bg-orange-50', 'label' => 'Korban Terluka', 'value' => $bencana->informasiBencana->korban_terluka],
+                        ['icon' => 'house-chimney-crack', 'color' => 'text-red-500', 'bg' => 'bg-red-50', 'label' => 'Tingkat Kerusakan', 'value' => $bencana->informasiBencana->dampak_kerusakan ?? ''],
+                        ['icon' => 'person-falling-burst', 'color' => 'text-red-600', 'bg' => 'bg-red-50', 'label' => 'Korban Meninggal', 'value' => $bencana->informasiBencana->korban_meninggal ?? ''],
+                        ['icon' => 'person-hiking', 'color' => 'text-yellow-500', 'bg' => 'bg-yellow-50', 'label' => 'Korban Mengungsi', 'value' => $bencana->informasiBencana->korban_mengungsi ?? ''],
+                        ['icon' => 'user-injured', 'color' => 'text-orange-500', 'bg' => 'bg-orange-50', 'label' => 'Korban Terluka', 'value' => $bencana->informasiBencana->korban_terluka ?? ''],
                         ['icon' => 'location-dot', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50', 'label' => 'Lokasi', 'value' => $bencana->desa->nama_desa],
                     ];
                 @endphp
