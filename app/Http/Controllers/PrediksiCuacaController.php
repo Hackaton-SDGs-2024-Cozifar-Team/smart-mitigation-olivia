@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class PrediksiCuacaController extends Controller
 {
@@ -123,26 +124,40 @@ class PrediksiCuacaController extends Controller
 
     public function getprediksi()
     {
-        $subquery = DB::table('prediksi_bencanas')
-        ->select('id_desa', DB::raw('MAX(tanggal_prediksi) as tanggal_prediksi'))
-        ->where('status_prediksi', 'terprediksi')
-        ->groupBy('id_desa');
+        // Cache for 30 minutes
+        $prediksi = Cache::remember('prediksi_bencana_latest', 1800, function () {
+            $subquery = DB::table('prediksi_bencanas')
+                ->select('id_desa', DB::raw('MAX(tanggal_prediksi) as tanggal_prediksi'))
+                ->where('status_prediksi', 'terprediksi')
+                ->groupBy('id_desa');
 
-    $prediksi = DB::table('prediksi_bencanas as pb')
-        ->joinSub($subquery, 'latest', function ($join) {
-            $join->on('pb.id_desa', '=', 'latest.id_desa')
-                 ->on('pb.tanggal_prediksi', '=', 'latest.tanggal_prediksi');
-        })
-        ->join('desas', 'pb.id_desa', '=', 'desas.id_desa')
-        ->select('pb.id_desa', 'pb.tanggal_prediksi', 'desas.latitude','desas.longitude','desas.nama_desa','pb.tanggal_prediksi')
-        ->get();
+            return DB::table('prediksi_bencanas as pb')
+                ->joinSub($subquery, 'latest', function ($join) {
+                    $join->on('pb.id_desa', '=', 'latest.id_desa')
+                         ->on('pb.tanggal_prediksi', '=', 'latest.tanggal_prediksi');
+                })
+                ->join('desas', 'pb.id_desa', '=', 'desas.id_desa')
+                ->select('pb.id_desa', 'pb.tanggal_prediksi', 'desas.latitude','desas.longitude','desas.nama_desa','pb.tanggal_prediksi')
+                ->get();
+        });
 
         return response()->json($prediksi);
     }
 
     public function getCluster()
     {
-        $cluster = ClusteringBencana::with('desa')->get();
+        // Cache for 1 hour since cluster data changes less frequently
+        $cluster = Cache::remember('clustering_bencana_data', 3600, function () {
+            return ClusteringBencana::with('desa')->get();
+        });
+        
         return response()->json($cluster);
+    }
+
+    // Add method to clear caches when data changes
+    public function clearCaches()
+    {
+        Cache::forget('prediksi_bencana_latest');
+        Cache::forget('clustering_bencana_data');
     }
 }

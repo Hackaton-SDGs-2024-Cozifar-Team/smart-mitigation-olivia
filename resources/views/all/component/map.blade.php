@@ -21,8 +21,104 @@
 </section>
 
 <script>
-    var mapPrediksi = L.map('mapPrediksi').setView([-8.184486, 113.668076], 14); // Jakarta
+    // Global cache for GeoJSON data to avoid repeated loading
+    let geoJsonCache = null;
+    let isGeoJsonLoading = false;
+    const geoJsonPromise = new Promise((resolve, reject) => {
+        if (geoJsonCache) {
+            resolve(geoJsonCache);
+            return;
+        }
+        
+        if (isGeoJsonLoading) {
+            // Wait for existing request
+            const checkCache = setInterval(() => {
+                if (geoJsonCache) {
+                    clearInterval(checkCache);
+                    resolve(geoJsonCache);
+                }
+            }, 100);
+            return;
+        }
+        
+        isGeoJsonLoading = true;
+        fetch('jember.geojson')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load GeoJSON');
+                return response.json();
+            })
+            .then(data => {
+                // Preprocess data for faster lookup
+                geoJsonCache = {};
+                data.forEach(el => {
+                    geoJsonCache[el.village] = el.border;
+                });
+                isGeoJsonLoading = false;
+                resolve(geoJsonCache);
+            })
+            .catch(error => {
+                isGeoJsonLoading = false;
+                console.error("Error loading GeoJSON file:", error);
+                reject(error);
+            });
+    });
 
+    // Optimized function to add village boundaries
+    function addVillageBoundary(map, villageName, properties, styleOptions = {}) {
+        return geoJsonPromise.then(geoData => {
+            const coordinates = geoData[villageName];
+            if (!coordinates) {
+                console.warn(`Village "${villageName}" not found in GeoJSON data`);
+                return null;
+            }
+
+            const geojsonData = {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [coordinates]
+                    },
+                    "properties": properties
+                }]
+            };
+
+            const defaultStyle = {
+                color: "#CA3F51",
+                weight: 2,
+                opacity: 1,
+                fillColor: "#C13E48",
+                fillOpacity: 0.3
+            };
+
+            const layer = L.geoJSON(geojsonData, {
+                style: { ...defaultStyle, ...styleOptions },
+                onEachFeature: function(feature, layer) {
+                    const tooltipContent = Object.values(properties).join(' - ');
+                    layer.bindTooltip(tooltipContent, {direction: "center", permanent: false});
+                    
+                    layer.on('mouseover', function(e) {
+                        layer.setStyle({weight: 5});
+                        layer.openTooltip();
+                    });
+                    layer.on('mouseout', function(e) {
+                        layer.setStyle({weight: 2});
+                        layer.closeTooltip();
+                    });
+                }
+            });
+
+            layer.addTo(map);
+            return layer;
+        }).catch(error => {
+            console.error('Error adding village boundary:', error);
+            return null;
+        });
+    }
+
+    // Prediksi Map
+    var mapPrediksi = L.map('mapPrediksi').setView([-8.184486, 113.668076], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapPrediksi);
@@ -31,181 +127,73 @@
         url: "/api/get-prediksi",
         method: "GET",
         success: function(data) {
-            // console.log(data);
+            // Process all predictions efficiently
+            const promises = data.map(element => {
+                return addVillageBoundary(
+                    mapPrediksi,
+                    element.nama_desa,
+                    {
+                        name: element.nama_desa,
+                        tanggal_prediksi: element.tanggal_prediksi
+                    }
+                );
+            });
 
-            data.forEach(element => {
-                // Mengambil koordinat dari setiap elemen data
-                var lat = element.latitude;
-                var lng = element.longitude;
-
-                // Menambahkan marker di posisi koordinat dari API
-                // var marker = L.marker([lat, lng]).addTo(mapPrediksi);
-
-                // // Mengikat popup dengan informasi yang sesuai untuk setiap marker
-                // var popupContent = "<b> Terdeteksi Banjir di tanggal " + element.tanggal_prediksi +
-                //     "</b>";
-
-                // // Menambahkan popup secara langsung ke posisi yang diinginkan di peta
-                // L.popup()
-                //     .setLatLng([lat, lng])
-                //     .setContent(popupContent)
-                //     .addTo(mapPrediksi);
-                // ///
-                fetch('jember.geojson')
-                    .then(response => response.json())
-                    .then(data => {
-                        // var searchValue = searchInput.value.toUpperCase();
-                        var coordinates = [];
-                        // console.log(data);
-
-                        data.forEach(el => {
-                            if (el.village == element.nama_desa) {
-                                el.border.forEach(border => {
-                                    coordinates.push(border);
-                                })
-                            }
-                        });
-                        console.log(coordinates);
-                        // Tambahkan data GeoJSON ke peta dengan gaya khusus
-                        var geojsonData = {
-                            "type": "FeatureCollection",
-                            "features": [{
-                                "type": "Feature",
-                                "geometry": {
-                                    "type": "Polygon",
-                                    "coordinates": [coordinates]
-                                },
-                                "properties": {
-                                    "name": element.nama_desa,
-                                    "tanggal_prediksi": element.tanggal_prediksi
-                                }
-                            }]
-                        };
-
-                        // Tambahkan batas daerah menggunakan GeoJSON
-                        L.geoJSON(geojsonData, {
-                            style: function(feature) {
-                                return {
-                                    color: "#CA3F51", // Warna garis batas
-                                    weight: 2,
-                                    opacity: 1,
-                                    fillColor: "#C13E48", // Warna isi
-                                    fillOpacity: 0.3 // Transparansi warna isi (0.0 - 1.0)
-                                };
-                            },
-                            onEachFeature: function(feature, layer) {
-                                layer.bindTooltip(feature.properties.name + ' - ' + feature.properties.tanggal_prediksi, {direction: "center", permanent: false});
-                                layer.on('mouseover', function(e) {
-                                    layer.setStyle({weight: 5});
-                                    layer.openTooltip();
-                                    // var bounds = layer.getBounds();
-                                    // mapPrediksi.flyToBounds(bounds, {maxZoom: 15, duration: 0.4});
-                                });
-                                layer.on('mouseout', function(e) {
-                                    layer.setStyle({weight: 2});
-                                    layer.closeTooltip();
-                                    // mapPrediksi.flyTo([-8.184486, 113.668076], 14, {duration: 0.4});
-                                });
-                            }
-                        }).addTo(mapPrediksi);
-                    })
-                    .catch(error => console.log("Error loading GeoJSON file:", error));
-                ///
-            })
+            Promise.allSettled(promises).then(results => {
+                const successful = results.filter(r => r.status === 'fulfilled' && r.value !== null).length;
+                console.log(`Successfully loaded ${successful}/${data.length} prediction boundaries`);
+            });
         },
-    })
+        error: function(xhr, status, error) {
+            console.error('Error loading prediction data:', error);
+        }
+    });
 
-    var mapPemetaan = L.map('mapPemetaan').setView([-8.184486, 113.668076], 14); // Jakarta
-
+    // Clustering Map
+    var mapPemetaan = L.map('mapPemetaan').setView([-8.184486, 113.668076], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapPemetaan);
+
     $.ajax({
         url: "/api/get-cluster",
         method: "GET",
         success: function(data) {
-            console.log(data);
+            const clusterColors = {
+                'tinggi': '#CA3F51',
+                'sedang': '#DACD38',
+                'rendah': '#24AA26'
+            };
 
-            data.forEach(element => {
-                // Mengambil koordinat dari setiap elemen data
-                var lat = element.latitude;
-                var lng = element.longitude;
-                var cluster = '';
-                if(element.cluster == 'tinggi') {
-                    cluster = '#CA3F51';
-                }else if(element.cluster == 'sedang') {
-                    cluster = '#DACD38';
-                }else if(element.cluster == 'rendah') {
-                    cluster = '#24AA26';
-                }
-                ///
-                fetch('jember.geojson')
-                    .then(response => response.json())
-                    .then(data => {
-                        // var searchValue = searchInput.value.toUpperCase();
-                        var coordinates = [];
+            const promises = data.map(element => {
+                const fillColor = clusterColors[element.cluster] || '#666666';
+                
+                return addVillageBoundary(
+                    mapPemetaan,
+                    element.desa.nama_desa,
+                    {
+                        name: element.desa.nama_desa,
+                        cluster: element.cluster
+                    },
+                    {
+                        fillColor: fillColor,
+                        color: "#CA3F51"
+                    }
+                );
+            });
 
-                        data.forEach(el => {
-                            if (el.village == element.desa.nama_desa) {
-                       
-                                el.border.forEach(border => {
-                                    coordinates.push(border);
-                                })
-                            }
-                        });
-                        console.log(coordinates);
-                        // Tambahkan data GeoJSON ke peta dengan gaya khusus
-                        var geojsonData = {
-                            "type": "FeatureCollection",
-                            "features": [{
-                                "type": "Feature",
-                                "geometry": {
-                                    "type": "Polygon",
-                                    "coordinates": [coordinates]
-                                },
-                                "properties": {
-                                    "name": element.desa.nama_desa,
-                                    "cluster": element.cluster
-                                }
-                            }]
-                        };
-
-                        // Tambahkan batas daerah menggunakan GeoJSON
-                        L.geoJSON(geojsonData, {
-                            style: function(feature) {
-                                return {
-                                    color: "#CA3F51", // Warna garis batas
-                                    weight: 2,
-                                    opacity: 1,
-                                    fillColor: cluster, // Warna isi
-                                    fillOpacity: 0.3 // Transparansi warna isi (0.0 - 1.0)
-                                };
-                            },
-                            onEachFeature: function(feature, layer) {
-                                layer.bindTooltip(feature.properties.name + ' - ' + feature.properties.cluster, {direction: "center", permanent: false});
-                                layer.on('mouseover', function(e) {
-                                    layer.setStyle({weight: 5});
-                                    layer.openTooltip();
-                                    // var bounds = layer.getBounds();
-                                    // mapPemetaan.flyToBounds(bounds, {maxZoom: 15, duration: 0.4});
-                                });
-                                layer.on('mouseout', function(e) {
-                                    layer.setStyle({weight: 2});
-                                    layer.closeTooltip();
-                                    // mapPemetaan.flyTo([-8.184486, 113.668076], 14, {duration: 0.4});
-                                });
-                            }
-                        }).addTo(mapPemetaan);
-                    })
-                    .catch(error => console.log("Error loading GeoJSON file:", error));
-                ///
-            })
+            Promise.allSettled(promises).then(results => {
+                const successful = results.filter(r => r.status === 'fulfilled' && r.value !== null).length;
+                console.log(`Successfully loaded ${successful}/${data.length} cluster boundaries`);
+            });
         },
-    })
+        error: function(xhr, status, error) {
+            console.error('Error loading cluster data:', error);
+        }
+    });
 
-    //laporannnnnn
-    var mapLaporan = L.map('mapLaporan').setView([-8.184486, 113.668076], 13); // Jakarta
-
+    // Laporan Map (unchanged as it doesn't use GeoJSON)
+    var mapLaporan = L.map('mapLaporan').setView([-8.184486, 113.668076], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mapLaporan);
@@ -331,6 +319,177 @@
         }
     });
 
+    // Map switching logic with performance optimization
+    $(document).ready(function() {
+        // Initially hide all maps except prediksi
+        $("#mapPrediksi").show();
+        $("#mapLaporan").hide();
+        $("#mapPemetaan").hide();
+        
+        // Lazy initialization flags
+        let laporanInitialized = false;
+        let pemetaanInitialized = false;
+
+        $("#btnPrediksi").click(function() {
+            $("#mapPrediksi").show();
+            $("#mapPemetaan").hide();
+            $("#mapLaporan").hide();
+            $("#btnPrediksi").addClass('active-btn');
+            $("#btnLaporan").removeClass('active-btn');
+            $("#btnPemetaan").removeClass('active-btn');
+            
+            // Refresh map size
+            setTimeout(() => mapPrediksi.invalidateSize(), 100);
+        });
+
+        $("#btnLaporan").click(function() {
+            $("#mapPrediksi").hide();
+            $("#mapPemetaan").hide();
+            $("#mapLaporan").show();
+            $("#btnPrediksi").removeClass('active-btn');
+            $("#btnPemetaan").removeClass('active-btn');
+            $("#btnLaporan").addClass('active-btn');
+            
+            // Lazy load laporan data
+            if (!laporanInitialized) {
+                loadLaporanData();
+                laporanInitialized = true;
+            }
+            
+            setTimeout(() => mapLaporan.invalidateSize(), 100);
+        });
+
+        $("#btnPemetaan").click(function() {
+            $("#mapPrediksi").hide();
+            $("#mapLaporan").hide();
+            $("#mapPemetaan").show();
+            $("#btnPrediksi").removeClass('active-btn');
+            $("#btnLaporan").removeClass('active-btn');
+            $("#btnPemetaan").addClass('active-btn');
+            
+            setTimeout(() => mapPemetaan.invalidateSize(), 100);
+        });
+    });
+
+    // Lazy load function for laporan data
+    function loadLaporanData() {
+        // Custom icon for disaster markers
+        var disasterIcon = L.divIcon({
+            className: 'custom-disaster-marker',
+            html: '<div class="marker-pin"><i class="fas fa-exclamation-triangle"></i></div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        $.ajax({
+            url: "/api/bencana",
+            method: "GET",
+            success: function(data) {
+                data.forEach(element => {
+                    var lat = element.latitude;
+                    var lng = element.longitude;
+
+                    var markers = L.marker([lat, lng], {icon: disasterIcon}).addTo(mapLaporan);
+
+                    var tanggalKejadian = new Date(element.tanggal_kejadian).toLocaleDateString('id-ID', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    var badgeColor = '';
+                    var badgeText = '';
+                    switch(element.tingkat_bencana.toLowerCase()) {
+                        case 'ringan':
+                            badgeColor = 'bg-green-500';
+                            badgeText = '🟢 Ringan';
+                            break;
+                        case 'sedang':
+                            badgeColor = 'bg-yellow-500';
+                            badgeText = '🟡 Sedang';
+                            break;
+                        case 'berat':
+                            badgeColor = 'bg-red-500';
+                            badgeText = '🔴 Berat';
+                            break;
+                        default:
+                            badgeColor = 'bg-gray-500';
+                            badgeText = '⚪ ' + element.tingkat_bencana;
+                    }
+
+                    // Popup content dengan styling yang lebih baik
+                    var popupContent = `
+                        <div class="disaster-popup">
+                            <div class="popup-header">
+                                <h3 class="popup-title">
+                                    <i class="fas fa-exclamation-triangle text-red-500"></i>
+                                    ${element.nama_bencana}
+                                </h3>
+                                <span class="severity-badge ${badgeColor}">
+                                    ${badgeText}
+                                </span>
+                            </div>
+                            
+                            <div class="popup-content">
+                                <div class="info-item">
+                                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                                    <span><strong>Lokasi:</strong> ${element.desa ? element.desa.nama_desa + ', ' + element.desa.kecamatan.nama_kecamatan : 'Lokasi tidak tersedia'}</span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-alt text-green-500"></i>
+                                    <span><strong>Tanggal:</strong> ${tanggalKejadian}</span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <i class="fas fa-users text-purple-500"></i>
+                                    <span><strong>Korban:</strong> ${element.korban_jiwa || 0} jiwa</span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <i class="fas fa-home text-orange-500"></i>
+                                    <span><strong>Rumah Rusak:</strong> ${element.rumah_rusak || 0} unit</span>
+                                </div>
+                                
+                                ${element.deskripsi ? `
+                                    <div class="info-item description">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span><strong>Deskripsi:</strong><br>${element.deskripsi}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="popup-actions">
+                                <a href="/detail-donasi/${element.id_laporan_bencana}" 
+                                   class="detail-button">
+                                    <i class="fas fa-heart mr-2"></i>
+                                    Donasi Sekarang
+                                </a>
+                                <button onclick="shareLocation(${lat}, ${lng}, '${element.nama_bencana}')" 
+                                        class="share-button">
+                                    <i class="fas fa-share-alt mr-2"></i>
+                                    Bagikan
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    markers.bindPopup(popupContent, {
+                        maxWidth: 350,
+                        className: 'custom-popup'
+                    });
+
+                    markers.on('mouseover', function(e) {
+                        this.openPopup();
+                    });
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading disaster data:', error);
+            }
+        });
+    }
+
     // Function to share location
     function shareLocation(lat, lng, name) {
         if (navigator.share) {
@@ -340,41 +499,10 @@
                 url: `https://www.google.com/maps?q=${lat},${lng}`
             });
         } else {
-            // Fallback - copy to clipboard
             navigator.clipboard.writeText(`Lokasi Bencana: ${name} - https://www.google.com/maps?q=${lat},${lng}`);
             alert('Link lokasi telah disalin ke clipboard!');
         }
     }
-
-    $(document).ready(function() {
-        $("#mapPrediksi").show();
-        $("#mapLaporan").hide();
-        $("#mapPemetaan").hide();
-        $("#btnPrediksi").click(function() {
-            $("#mapPrediksi").show();
-            $("#mapPemetaan").hide();
-            $("#mapLaporan").hide();
-            $("#btnPrediksi").addClass('active-btn');
-            $("#btnLaporan").removeClass('active-btn');
-            $("#btnPemetaan").removeClass('active-btn');
-        });
-        $("#btnLaporan").click(function() {
-            $("#mapPrediksi").hide();
-            $("#mapPemetaan").hide();
-            $("#mapLaporan").show();
-            $("#btnPrediksi").removeClass('active-btn');
-            $("#btnPemetaan").removeClass('active-btn');
-            $("#btnLaporan").addClass('active-btn');
-        });
-        $("#btnPemetaan").click(function() {
-            $("#mapPrediksi").hide();
-            $("#mapLaporan").hide();
-            $("#mapPemetaan").show();
-            $("#btnPrediksi").removeClass('active-btn');
-            $("#btnLaporan").removeClass('active-btn');
-            $("#btnPemetaan").addClass('active-btn');
-        });
-    })
 </script>
 
 <style>

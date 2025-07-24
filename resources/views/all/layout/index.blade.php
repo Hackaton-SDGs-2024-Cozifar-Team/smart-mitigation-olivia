@@ -50,8 +50,7 @@
     @include('all.component.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-    
-    <!-- PWA Install Button and Service Worker -->
+
     <script>
 
         // Add install button to page
